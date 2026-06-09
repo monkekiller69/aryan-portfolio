@@ -1,217 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aryan Khurana | Environment Artist</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 100%);
-      background-attachment: fixed;
-      background-size: 400% 400%;
-      animation: gradientShift 30s ease infinite;
-      color: #000;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aryan Khurana | Playable Portfolio</title>
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #0b0b10, #050509);
+  color: #f5f5f5;
+  overflow: hidden;
+}
 
-    canvas#starfield {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: transparent;
-    }
+/* STARFIELD */
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
 
-    header, footer {
-      background-color: #111;
-      color: #fff;
-      padding: 1rem 2rem;
-      text-align: center;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 1rem 0;
-    }
-    nav a {
-      color: #000;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .container {
-      max-width: 960px;
-      margin: auto;
-      padding: 2rem;
-    }
-    h2 {
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 0.5rem;
-    }
-    .project {
-      margin-bottom: 2rem;
-    }
-    .project img, .project video {
-      width: 100%;
-      border-radius: 8px;
-      margin-top: 1rem;
-    }
-    .project-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 1rem;
-    }
-    .project-gallery img {
-      width: calc(50% - 5px);
-      border-radius: 8px;
-    }
-    .contact {
-      line-height: 1.6;
-    }
-  </style>
+/* SCANLINES */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.03) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  opacity: 0.2;
+  z-index: -1;
+}
+
+/* MAIN MENU */
+.menu {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  font-size: 3.5rem;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  opacity: 0.6;
+  margin-top: 10px;
+}
+
+.type {
+  border-right: 2px solid #ffb347;
+  white-space: nowrap;
+  overflow: hidden;
+  min-height: 20px;
+  margin-top: 10px;
+  opacity: 0.7;
+}
+
+.btn {
+  margin-top: 25px;
+  padding: 12px 24px;
+  background: #ffb347;
+  color: black;
+  border: none;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.blink {
+  animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* WORLD SELECT */
+.worlds {
+  display: none;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  padding: 40px;
+}
+
+.world {
+  max-width: 700px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid rgba(255,179,71,0.25);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  background: rgba(255,255,255,0.02);
+}
+
+.world:hover {
+  transform: scale(1.03);
+  border-color: #ffb347;
+  background: rgba(255,179,71,0.05);
+}
+
+.world-id {
+  font-size: 12px;
+  opacity: 0.5;
+  letter-spacing: 2px;
+}
+
+.world-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.world-desc {
+  font-size: 13px;
+  opacity: 0.6;
+  margin-top: 5px;
+}
+
+/* VIEWER */
+.viewer {
+  display: none;
+  height: 100vh;
+  padding: 40px;
+}
+
+.viewer-content {
+  max-width: 900px;
+  margin: auto;
+}
+
+.viewer img, .viewer video {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.back {
+  margin-bottom: 20px;
+  cursor: pointer;
+  color: #ffb347;
+}
+
+/* CONTACT SCREEN */
+#contact {
+  display: none;
+}
+</style>
 </head>
+
 <body>
-  <canvas id="starfield"></canvas>
 
-  <header>
-    <h1>Aryan Khurana</h1>
-    <p>Game Environment Artist & Unreal Designer</p>
-  </header>
+<canvas id="starfield"></canvas>
+<div class="scanlines"></div>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
+<!-- MAIN MENU -->
+<div class="menu" id="menu">
 
-  <div class="container">
-    <section id="about">
-      <h2>About Me</h2>
-      <p>
-        I am Aryan Khurana, a passionate Game Environment Artist deeply inspired by immersive virtual worlds. With a background in Unreal Engine design and interactive storytelling, I specialize in crafting environments that blend technical mastery with artistic storytelling. My workflow integrates blueprint scripting, custom shaders, and environmental design with a narrative focus. I’m constantly experimenting with interactive systems, visual scripting, and player-driven spaces to make each world more alive and meaningful.
-      </p>
-      <p>
-        Over the years, I’ve developed a strong foundation in game design principles through both academic learning and hands-on experimentation. I love finding creative ways to communicate ideas and emotions through environment art. My curiosity for storytelling and game systems often leads me to design unconventional spaces that evoke emotions or challenge expectations. I actively follow game development trends, but always aim to bring my own twist. When I’m not creating in Unreal, I’m likely sketching new world ideas or testing game mechanics.
-      </p>
-    </section>
+  <div class="title">ARYAN KHURANA</div>
 
-    <section id="projects">
-      <h2>Projects</h2>
+  <div class="subtitle">Playable Environment Design Portfolio</div>
 
-      <div class="project">
-        <h3>Drug Awareness Museum</h3>
-        <p>
-          This interactive Unreal Engine experience simulates a virtual museum, where players are guided by an NPC that explains various harmful drugs, their symptoms, and their long-term effects. The primary objective of the project is to spread awareness and keep youth informed in a captivating, non-preachy way. The NPC automation was developed entirely using self-made Blueprints, with reactive interaction zones and guided narration.
-        </p>
-        <div class="project-gallery">
-          <img src="images/drug-museum-1.png" alt="Drug Museum Screenshot 1" />
-          <img src="images/drug-museum-2.png" alt="Drug Museum Screenshot 2" />
-        </div>
-        <video controls>
-          <source src="videos/drug-museum.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
+  <div class="type" id="typeText"></div>
 
-      <div class="project">
-        <h3>Snow Jungle Exploration</h3>
-        <p>
-          A visually stunning snowy jungle environment built entirely in Unreal Engine. The landscape features climbable mountains, dense pine forest trails, and collectible rewards placed at landmarks. A branching dialogue system introduces story elements and mission objectives as players explore. This project allowed me to explore terrain sculpting, atmospheric lighting, and spatial audio for environmental immersion.
-        </p>
-        <video controls>
-          <source src="videos/snow-jungle.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-
-      <div class="project">
-        <h3>Choke Point PvP Map</h3>
-        <p>
-          A tight, tactical multiplayer PvP map designed with verticality, sightlines, and chokepoint balance in mind. The level was constructed entirely from scratch, including a custom-designed skybox made via 29a.ch to match the stylized lighting of the scene. This map includes narrow corridors, sniper sightlines, and alternative flanking paths to give players multiple strategic options. It showcases my skills in level layout, navigation mesh design, and player flow testing.
-        </p>
-        <div class="project-gallery">
-          <img src="images/choke-point-1.png" alt="Choke Point Screenshot 1" />
-          <img src="images/choke-point-2.png" alt="Choke Point Screenshot 2" />
-          <img src="images/choke-point-3.png" alt="Choke Point Screenshot 3" />
-          <img src="images/choke-point-4.png" alt="Choke Point Screenshot 4" />
-        </div>
-        <video controls>
-          <source src="videos/choke-point.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    </section>
-
-    <section id="contact">
-      <h2>Contact</h2>
-      <p class="contact">
-        Email: <a href="mailto:awesomekanha@gmail.com">awesomekanha@gmail.com</a><br />
-        Behance: <a href="https://www.behance.net/aryankhurana3" target="_blank">behance.net/aryankhurana3</a>
-      </p>
-    </section>
+  <div class="blink">
+    <button class="btn" onclick="enterWorlds()">▶ PRESS START</button>
   </div>
 
-  <footer>
-    <p>© 2025 Aryan Khurana. All rights reserved.</p>
-  </footer>
+  <button class="btn" onclick="openContact()" style="margin-top:10px;">
+    CONTACT
+  </button>
 
-  <script>
-  const canvas = document.getElementById('starfield');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
+  <div style="margin-top:18px; opacity:0.6; font-size:13px;">
+    Unreal Engine • Level Design • Environment Art
+  </div>
 
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
+  <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+    <div style="padding:6px 10px; border:1px solid #ffb347; border-radius:6px; font-size:12px;">STATUS: ACTIVE</div>
+    <div style="padding:6px 10px; border:1px solid #ffb347; border-radius:6px; font-size:12px;">ENGINE: UE5</div>
+    <div style="padding:6px 10px; border:1px solid #ffb347; border-radius:6px; font-size:12px;">ROLE: ENVIRONMENT DESIGN</div>
+  </div>
 
-  function createStars() {
-    stars = [];
-    for (let i = 0; i < 150; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1, // slightly bigger
-        speed: Math.random() * 0.2 + 0.05,
-        opacity: 0.8 + Math.random() * 0.2 // start bright
-      });
-    }
-  }
+  <div style="margin-top:20px; font-size:12px; opacity:0.4;">
+    “Every environment is a decision space.”
+  </div>
 
-  function animateStars(scrollY = 0) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(star => {
-      star.y += star.speed + scrollY * 0.001;
-      if (star.y > canvas.height) star.y = 0;
-      star.opacity += (Math.random() - 0.5) * 0.05;
-      star.opacity = Math.max(0.7, Math.min(1, star.opacity)); // never below 70% brightness
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.radius, 0, 2 * Math.PI);
-      ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-      ctx.fill();
+</div>
+
+<!-- WORLD SELECT -->
+<div class="worlds" id="worlds">
+
+  <div class="world" onclick="openWorld('drug')">
+    <div class="world-id">WORLD 01</div>
+    <div class="world-title">Awareness Simulation Facility</div>
+    <div class="world-desc">Narrative-driven interactive environment focused on guided exploration and consequence-based storytelling.</div>
+  </div>
+
+  <div class="world" onclick="openWorld('necro')">
+    <div class="world-id">WORLD 02</div>
+    <div class="world-title">Necropriest — Ritual of the Hollow Cathedral</div>
+    <div class="world-desc">Dark atmospheric environment centered around ritual architecture, psychological tension, and environmental storytelling.</div>
+  </div>
+
+  <div class="world" onclick="openWorld('choke')">
+    <div class="world-id">WORLD 03</div>
+    <div class="world-title">Tactical Arena System</div>
+    <div class="world-desc">Competitive multiplayer environment designed around controlled sightlines and strategic flow.</div>
+  </div>
+
+  <div style="margin-top:30px;">
+    <button class="btn" onclick="backToMenu()">← RETURN TO MAIN MENU</button>
+  </div>
+
+</div>
+
+<!-- VIEWER -->
+<div class="viewer" id="viewer">
+  <div class="back" onclick="back()">← Return</div>
+  <div class="viewer-content" id="content"></div>
+</div>
+
+<!-- CONTACT -->
+<div class="worlds" id="contact">
+
+  <div class="world" style="cursor:default;">
+    <div class="world-id">TRANSMISSION NODE</div>
+    <div class="world-title">Contact / Network Access</div>
+    <div class="world-desc">Open for collaboration, internships, and environment design opportunities.</div>
+
+    <div style="margin-top:20px;">
+      Email: <br>
+      <span style="opacity:0.7;">awesomekanha@gmail.com</span>
+    </div>
+
+    <div style="margin-top:15px;">
+      LinkedIn: <br>
+      <a href="https://www.linkedin.com/in/aryan-khurana-382389232/" target="_blank" style="color:#ffb347;">
+        Open Profile
+      </a>
+    </div>
+
+    <div style="margin-top:30px;">
+      <button class="btn" onclick="backToMenu()">← RETURN TO MAIN MENU</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* STARFIELD */
+const canvas = document.getElementById("starfield");
+const ctx = canvas.getContext("2d");
+let stars = [];
+
+function resize(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+
+function init(){
+  stars = [];
+  for(let i=0;i<120;i++){
+    stars.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      s: Math.random()*0.3+0.1
     });
-    requestAnimationFrame(() => animateStars(window.scrollY));
+  }
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let s of stars){
+    s.y += s.s;
+    if(s.y>canvas.height) s.y=0;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,1.2,0,Math.PI*2);
+    ctx.fillStyle="white";
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+
+/* TYPEWRITER */
+const text = "INITIALIZING SIMULATION SYSTEM...";
+let i = 0;
+
+function typeWriter(){
+  if(i < text.length){
+    document.getElementById("typeText").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 60);
+  }
+}
+
+/* NAVIGATION */
+function enterWorlds(){
+  document.getElementById("menu").style.display="none";
+  document.getElementById("worlds").style.display="flex";
+  document.getElementById("contact").style.display="none";
+}
+
+function backToMenu(){
+  document.getElementById("menu").style.display="flex";
+  document.getElementById("worlds").style.display="none";
+  document.getElementById("contact").style.display="none";
+}
+
+function openContact(){
+  document.getElementById("menu").style.display="none";
+  document.getElementById("worlds").style.display="none";
+  document.getElementById("contact").style.display="flex";
+}
+
+function openWorld(id){
+  const viewer = document.getElementById("viewer");
+  const content = document.getElementById("content");
+
+  viewer.style.display="block";
+  document.getElementById("worlds").style.display="none";
+
+  if(id==="drug"){
+    content.innerHTML=`
+      <h2>Awareness Simulation Facility</h2>
+      <img src="images/drug-museum-1.png">
+      <img src="images/drug-museum-2.png">
+      <video src="videos/drug-museum.mp4" controls></video>
+    `;
   }
 
-  window.addEventListener('resize', () => {
-    resize();
-    createStars();
-  });
+  if(id==="necro"){
+    content.innerHTML=`
+      <h2>Necropriest — Ritual of the Hollow Cathedral</h2>
+      <img src="images/necropriest-1.png">
+      <img src="images/necropriest-2.png">
+      <video src="videos/necropriest.mp4" controls></video>
+    `;
+  }
 
+  if(id==="choke"){
+    content.innerHTML=`
+      <h2>Tactical Arena System</h2>
+      <img src="images/choke-point-1.png">
+      <img src="images/choke-point-2.png">
+      <img src="images/choke-point-3.png">
+      <img src="images/choke-point-4.png">
+      <video src="videos/choke-point.mp4" controls></video>
+    `;
+  }
+}
+
+function back(){
+  document.getElementById("viewer").style.display="none";
+  document.getElementById("worlds").style.display="flex";
+}
+
+/* INIT */
+resize();
+init();
+draw();
+typeWriter();
+
+window.addEventListener("resize",()=>{
   resize();
-  createStars();
-  animateStars();
+  init();
+});
+
+window.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape"){
+    backToMenu();
+  }
+});
+
 </script>
+
 </body>
 </html>
