@@ -11,7 +11,11 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: radial-gradient(circle at top, #0b0b10, #050509);
   color: #f5f5f5;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+  html {
+  scroll-behavior: smooth;
 }
 
 /* STARFIELD */
@@ -143,6 +147,8 @@ canvas {
   display: none;
   height: 100vh;
   padding: 40px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .viewer-content {
